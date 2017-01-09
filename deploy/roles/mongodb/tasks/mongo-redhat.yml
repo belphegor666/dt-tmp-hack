@@ -1,0 +1,15 @@
+---
+  - name: Execute yum install
+    yum: name={{item}} state=present
+    with_items : 
+      - python
+      - libselinux-python
+      - policycoreutils-python
+    when: ansible_os_family == 'RedHat'
+
+  - name: RedHat | Add source sources
+    template: src=mongodb.repo dest=/etc/yum.repos.d/mongodb-org-3.0.repo
+
+  - name: RedHat | Install Packages
+    yum: name={{ item }} state=installed
+    with_items: mongodb_packages

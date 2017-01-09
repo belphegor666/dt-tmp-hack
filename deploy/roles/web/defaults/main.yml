@@ -1,0 +1,2 @@
+epel_repo_url: "http://download.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm"
+epel_repo_gpg_key_url: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6"

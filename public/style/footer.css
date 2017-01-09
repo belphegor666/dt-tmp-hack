@@ -1,0 +1,64 @@
+html { min-height:100%;
+background-color:#F2F1F1;
+font-family: Verdana,Arial,sans-serif;
+ margin:0px; padding:0px;
+}
+
+a:link {
+text-decoration: none;
+color: black;
+}
+
+body { min-height:100%;
+ margin:0px; padding:0px;
+background-color:#F2F1F1;
+}
+
+.footer-wrapper {
+
+border-top: 1px solid grey;
+height:90px;
+bottom:0px;
+position:relative;
+background-color:#FFFFFF;
+width:100%;
+
+}
+
+.footer-social {
+display:inline-block;
+  float: right;
+  padding: 10px;
+  margin-right:20px;
+}
+
+.footer-social li{
+display:inline-block;
+margin-left:3px;
+margin-right:3px;
+font-size: 13px;
+  line-height: 54px;
+}
+
+.footer-foot {
+border-top: 1px solid grey;
+  font-size: 13px;
+  line-height: 54px;
+  text-align: left;
+
+
+}
+
+.footer-links {
+margin-left:20px;
+float:left;
+}
+
+.companys {
+  text-align: center;
+  padding-bottom: 40px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #0066a1;
+  margin-top: 20px;
+}

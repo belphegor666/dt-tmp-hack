@@ -1,0 +1,59 @@
+
+  <div class="col-md-8 col-md-push-4 col-sm-8 col-sm-push-4">
+              <div class="ticker blue_gradient">
+                <div class="viewport">  
+                        <span style="background:none; background-image:none; background-color: none; box-shadow: 0px 0px 0px 0px;"><strong>Latest News - </strong></span>
+                        
+                    <div ng-repeat="news_item in news_items" class="boxtext"><div><a href="https://cloudcanopyatospov.service-now.com/nav_to.do?uri=kb_view.do?sys_kb_id={{notification.sys_id}}" target="_new">{{ news_item.title }}</a></div></div>
+
+                </div>
+            </div>
+    <h1>{{displayDate | date:'EEEE dd MMMM yyyy'}}</h1>
+    <div gridster="gridsterOpts" class='gridsterOpts'>
+        <li gridster-item="obj" ng-repeat="obj in applications" ng-style="{'background-color': '{{obj.bgcolour}}'}" class="tile">
+            <a href="{{obj.url}}" target="_self">
+                <img src="{{obj.img}}" class="img-responsive" />
+                <div class="appname">{{obj.name}}</div>
+                <appdesc>
+                    <p>{{obj.description}}</p>
+                </appdesc>
+            </a>
+        </li>
+    </div>
+
+</div>
+
+
+<div class="col-md-4 col-md-pull-8 col-sm-4 col-sm-pull-8">
+    <div class="header">
+       
+    </div>
+    <br/>
+    <div class="list-group">
+        <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">WARNING: eCommerce Business Transaction Issues.</h4>
+            <p class="list-group-item-text">Business Transaction response time is much higher than normal</p>
+        </a>
+        <br/>
+        <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">IDC CxO Pan European Digital Transformation Summit</h4>
+            <p class="list-group-item-text">2-3 July 2015 in Paris: do you know more about the agenda?</p>
+        </a>
+        <br/>
+        <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">#Pennyforyourthought15</h4>
+            <p class="list-group-item-text">Hadoop offering will enhance Atos’ new-born Big Data & Security service line services</p>
+        </a>
+        <br/>
+        <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">TBR publish report</h4>
+            <p class="list-group-item-text">Atos: Expanding in Cloud, Cybersecurity, Big Data and the U.S.” for the fourth calendar quarter of 2014</p>
+        </a>
+        <br/>
+        <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">Atos ranked as a MAJOR PLAYER in IDC MarketScape</h4>
+            <p class="list-group-item-text">Worldwide Professional Services Firms for SAP Suite on HANA in Utilities 2015 Vendor Assessment.</p>
+        </a>
+    </div>
+</div>
+

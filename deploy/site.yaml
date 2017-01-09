@@ -1,0 +1,8 @@
+---
+- name: Deploy Node Application
+  hosts: tag_class_{{env}}-portalserver
+  remote_user: "{{remote_user}}"
+  sudo: yes
+  roles : 
+    - mongodb
+    - web

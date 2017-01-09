@@ -1,0 +1,32 @@
+---    
+  - name: Create the mongod user
+    user: name=mongod comment="MongoD"
+
+  - include: mongo-redhat.yml
+    when: ansible_os_family == 'RedHat'
+
+  - include: mongo-debian.yml
+    when: ansible_os_family == 'Debian'
+
+  - name: create data directory for mongodb
+    file: path={{ mongodb_datadir_prefix }}/portal state=directory owner=mongod group=mongod
+
+  - name: Create the mongodb configuration file
+    template: src=mongodb.conf dest=/etc/init/mongodb.conf
+    when: ansible_os_family == 'Debian'
+
+  - name: Copy the keyfile for authentication
+    copy: src=secret dest={{ mongodb_datadir_prefix }}/secret owner=mongod group=mongod mode=0400
+
+  - name: Start Mongo Service
+    service: name=mongodb state=started
+    when: ansible_os_family == 'Debian'
+
+  - name: Change SELINUX
+    command: semanage port -a -t mongod_port_t -p tcp 27017
+    when: ansible_os_family == 'RedHat'
+    ignore_errors: yes
+
+  - name: Start Mongo Service
+    service: name=mongod state=started
+    when: ansible_os_family == 'RedHat'

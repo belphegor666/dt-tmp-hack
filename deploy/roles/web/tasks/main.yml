@@ -1,0 +1,82 @@
+---    
+  - name: Stop Application
+    service: name=portal state=stopped
+    ignore_errors: yes
+
+  - name: Execute apt-get
+    apt: name={{item}} state=present
+    with_items : 
+      - node
+      - npm
+      - git
+    when: ansible_os_family == 'Debian'
+
+  - name: Install EPEL repo.
+    yum:
+      name: "{{ epel_repo_url }}"
+      state: present
+    when: ansible_os_family == 'RedHat'
+
+  - name: Import EPEL GPG key.
+    rpm_key:
+      key: "{{ epel_repo_gpg_key_url }}"
+      state: present
+    when: ansible_os_family == 'RedHat'
+
+  - name: Execute yum install
+    yum: name={{item}} state=present enablerepo=epel
+    with_items : 
+      - nodejs
+      - npm
+      - git
+      - python
+      - libselinux-python
+    when: ansible_os_family == 'RedHat'
+
+  - name: Create group
+    group: name={{group}} state=present
+  - name: Create Application User 
+    user: name={{user}} system=yes comment="Portal User" group={{group}} password="povAS.1K8ELrE"
+  # Fully quoted because of the ': ' on the line. See the Gotchas in the Ansible YAML docs.
+  - lineinfile: "dest=/etc/sudoers state=present regexp='^%{{user}}' line='%{{user}} ALL=(ALL) NOPASSWD: ALL'"
+
+  - name: Appending your ~/.ssh/id_rsa.pub key to the portalusr demo user 
+    authorized_key: user={{user}} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+  - name: Create Application Folder
+    file: path={{basedir}}{{project_name}} owner={{user}} group=web mode=0755 state=directory
+  - name: Tar Source
+    command : tar -cvzf ../../../../Portal.tar.gz ../
+    delegate_to: 127.0.0.1
+  - name: Untar file
+    unarchive : src=../../../../Portal.tar.gz dest={{basedir}}{{project_name}} copy=yes group=web owner={{user}}
+  - name : Execute npm install
+    npm: path={{basedir}}{{project_name}}
+  - name: Add upstart conf
+    template: src=portal.conf dest=/etc/init/portal.conf
+    when: ansible_os_family == 'Debian'
+  - name: Add init.d conf
+    template: src=portal_redhat.service dest=/etc/init.d/portal mode=u+rwx
+    when: ansible_os_family == 'RedHat'
+
+  - name: Add env specific migrations
+    template: src=0021_addUserImages.js dest=/var/www/portal/migrations/0021_addUserImages.js
+  - name: Run migrations down
+    command : node {{basedir}}{{project_name}}/node_modules/mongo-migrate/index.js -runmm  -c {{basedir}}{{project_name}} down
+    ignore_errors: yes
+    when: ansible_os_family == 'RedHat'
+  - name: Run migrations up
+    command : node {{basedir}}{{project_name}}/node_modules/mongo-migrate/index.js -runmm  -c {{basedir}}{{project_name}} up
+    ignore_errors: yes
+    when: ansible_os_family == 'RedHat'
+  - name: Run migrations down
+    command : nodejs {{basedir}}{{project_name}}/node_modules/mongo-migrate/index.js -runmm  -c {{basedir}}{{project_name}} down
+    ignore_errors: yes
+    when: ansible_os_family == 'Debian'
+  - name: Run migrations up
+    command : nodejs {{basedir}}{{project_name}}/node_modules/mongo-migrate/index.js -runmm  -c {{basedir}}{{project_name}} up
+    ignore_errors: yes
+    when: ansible_os_family == 'Debian'
+
+  - name: Start Application
+    service: name=portal state=restarted
